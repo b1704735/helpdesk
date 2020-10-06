@@ -32,7 +32,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    Toast.makeText(getApplicationContext(),"Ngu qua!",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),"Tài khoản hoặc mật khẩu không đúng",Toast.LENGTH_LONG).show();
                 }
 
             }
