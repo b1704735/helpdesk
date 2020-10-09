@@ -20,6 +20,7 @@
     <activity android:name=".AddDataActivity"></activity>
     <activity android:name=".DataActivity"></activity>
     <activity android:name=".LoginActivity"></activity>
+    <activity android:name="tmpActivity"></activity>
     </application>
 
 </manifest>

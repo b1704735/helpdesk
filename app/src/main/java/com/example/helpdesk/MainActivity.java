@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, DataActivity.class);
                 startActivity(intent);
-                //Toast.makeText(getApplicationContext(),"dcmm",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(),"lỗi",Toast.LENGTH_SHORT).show();
             }
         });
     }
