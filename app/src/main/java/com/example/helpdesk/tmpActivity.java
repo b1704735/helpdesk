@@ -2,62 +2,91 @@ package com.example.helpdesk;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class tmpActivity extends AppCompatActivity {
-    private EditText mail,name,position,contacts;
-    private Button add;
+    private EditText inputEmail, inputPassword;
+    private FirebaseAuth auth;
+    private Button btnLogin;
+    private ProgressBar progressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tmp);
 
-        contacts = (EditText) findViewById(R.id.edtcontacts);
-        mail = (EditText) findViewById(R.id.edtmail);
-        name = (EditText) findViewById(R.id.edtname);
-        position = (EditText) findViewById(R.id.edtposition);
-/*
-        String cts = contacts.getText().toString();
-        String email = mail.getText().toString();
-        final String fullname = name.getText().toString();
-        final String position1 = position.getText().toString();
-*/
-        add = (Button) findViewById(R.id.btnadd);
-        add.setOnClickListener(new View.OnClickListener() {
+        auth = FirebaseAuth.getInstance();
+
+        if (auth.getCurrentUser() != null) {
+            startActivity(new Intent(tmpActivity.this, MainActivity.class));
+            finish();
+        }
+
+        setContentView(R.layout.activity_tmp);
+
+        inputEmail = (EditText) findViewById(R.id.email);
+        inputPassword = (EditText) findViewById(R.id.password);
+        btnLogin = (Button) findViewById(R.id.btn_login);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+
+        auth = FirebaseAuth.getInstance();
+
+        btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    //Toast.makeText(getApplicationContext(),contacts.getText().toString()+" "+mail.getText().toString()+" "+name.getText().toString()+" "+position.getText().toString(),Toast.LENGTH_LONG).show();
 
-                    FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    //Kết nối tới node có tên là users (node này do ta định nghĩa trong CSDL Firebase)
-                    DatabaseReference myRef = database.getReference("users");
+                String email = inputEmail.getText().toString();
+                final String password = inputPassword.getText().toString();
 
-                    myRef.child(contacts.getText().toString()).child("E-mail").setValue(mail.getText().toString());
-                    myRef.child(contacts.getText().toString()).child("name").setValue(name.getText().toString());
-                    myRef.child(contacts.getText().toString()).child("position").setValue(position.getText().toString());
-                    Intent intent = new Intent(tmpActivity.this, DataActivity.class);
-                    startActivity(intent);
-                }catch (Exception e){
-                    Toast.makeText(getApplicationContext(),"loi",Toast.LENGTH_LONG).show();
+                if (TextUtils.isEmpty(email)) {
+                    Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
+                    return;
                 }
+
+                if (TextUtils.isEmpty(password)) {
+                    Toast.makeText(getApplicationContext(), "Enter password!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                progressBar.setVisibility(View.VISIBLE);
+
+                auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(tmpActivity.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        progressBar.setVisibility(View.GONE);
+                        if (!task.isSuccessful()) {
+                            // there was an error
+                            if (password.length() < 6) {
+                                inputPassword.setError(getString(R.string.minimum_password));
+                            } else {
+                                Toast.makeText(tmpActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
+                            }
+                        } else {
+                            Intent intent = new Intent(tmpActivity.this, MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                    }
+                }
+            });
 
             }
         });
+
+
 
 
 
