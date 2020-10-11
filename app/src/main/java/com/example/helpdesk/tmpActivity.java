@@ -31,10 +31,12 @@ public class tmpActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
 
+        //bug in here
+        /* // hàm kiểm tra trạng thái đăng nhập
         if (auth.getCurrentUser() != null) {
-            startActivity(new Intent(tmpActivity.this, MainActivity.class));
+            startActivity(new Intent(tmpActivity.this, DataActivity.class));
             finish();
-        }
+        }*/
 
         setContentView(R.layout.activity_tmp);
 
@@ -79,6 +81,8 @@ public class tmpActivity extends AppCompatActivity {
                             Intent intent = new Intent(tmpActivity.this, MainActivity.class);
                             startActivity(intent);
                             finish();
+
+                            Toast.makeText(tmpActivity.this,"Đăng nhập thành công",Toast.LENGTH_SHORT).show();
                     }
                 }
             });

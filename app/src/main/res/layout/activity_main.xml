@@ -10,7 +10,7 @@
         android:id="@+id/btnaddData"
         android:layout_width="158dp"
         android:layout_height="47dp"
-        android:text="Test đăng nhập ở đây"
+        android:text="Test ở đây"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -39,5 +39,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.636" />
+
+    <Button
+        android:id="@+id/btnlogout"
+        android:layout_width="185dp"
+        android:layout_height="72dp"
+        android:text="Đăng xuất"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.977"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
