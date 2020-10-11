@@ -28,7 +28,8 @@ public class DataActivity extends AppCompatActivity {
 //lấy đối tượng FirebaseDatabase
         FirebaseDatabase database = FirebaseDatabase.getInstance();
 //Kết nối tới node có tên là users (node này do ta định nghĩa trong CSDL Firebase)
-        DatabaseReference myRef = database.getReference("problems");
+        String keyyy = "-MJM-3XxCfpUgfSyxl9K";
+        final DatabaseReference myRef = database.getReference().child("problems");
 //truy suất và lắng nghe sự thay đổi dữ liệu
         myRef.addValueEventListener(new ValueEventListener() {
             @Override

@@ -1,98 +1,70 @@
 package com.example.helpdesk;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.text.TextUtils;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.Toast;
-import android.widget.Toolbar;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
 
 public class tmpActivity extends AppCompatActivity {
-    private EditText inputEmail, inputPassword;
-    private FirebaseAuth auth;
-    private Button btnLogin;
-    private ProgressBar progressBar;
+
+    ListView lvContact;
+    ArrayAdapter<String> adapter;
+    String TAG="FIREBASE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tmp);
-
-        auth = FirebaseAuth.getInstance();
-
-        //bug in here
-        /* // hàm kiểm tra trạng thái đăng nhập
-        if (auth.getCurrentUser() != null) {
-            startActivity(new Intent(tmpActivity.this, DataActivity.class));
-            finish();
-        }*/
-
-        setContentView(R.layout.activity_tmp);
-
-        inputEmail = (EditText) findViewById(R.id.email);
-        inputPassword = (EditText) findViewById(R.id.password);
-        btnLogin = (Button) findViewById(R.id.btn_login);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-
-        auth = FirebaseAuth.getInstance();
-
-        btnLogin.setOnClickListener(new View.OnClickListener() {
+        adapter=new ArrayAdapter<>(this,android.R.layout.simple_list_item_1);
+        lvContact=findViewById(R.id.lvContact);
+        lvContact.setAdapter(adapter);
+//lấy đối tượng FirebaseDatabase
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+//Kết nối tới node có tên là users (node này do ta định nghĩa trong CSDL Firebase)
+        String keyyy = "-MJM-3XxCfpUgfSyxl9K";
+        final DatabaseReference myRef = database.getReference().child("problems").getRef();
+//truy suất và lắng nghe sự thay đổi dữ liệu
+        myRef.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onClick(View view) {
-
-                String email = inputEmail.getText().toString();
-                final String password = inputPassword.getText().toString();
-
-                if (TextUtils.isEmpty(email)) {
-                    Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                if (TextUtils.isEmpty(password)) {
-                    Toast.makeText(getApplicationContext(), "Enter password!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                progressBar.setVisibility(View.VISIBLE);
-
-                auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(tmpActivity.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        progressBar.setVisibility(View.GONE);
-                        if (!task.isSuccessful()) {
-                            // there was an error
-                            if (password.length() < 6) {
-                                inputPassword.setError(getString(R.string.minimum_password));
-                            } else {
-                                Toast.makeText(tmpActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                adapter.clear();
+//vòng lặp để lấy dữ liệu khi có sự thay đổi trên Firebase
+                for (DataSnapshot data: dataSnapshot.getChildren())
+                {
+                    String key=data.getKey();
+                    FirebaseDatabase database2 = FirebaseDatabase.getInstance();
+                    DatabaseReference myRef2 = database2.getReference().child("problems").child(key).getRef();
+                    myRef2.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot data2: dataSnapshot.getChildren()){
+                                if(data2.getKey().equals("content")){
+                                    String value=data2.getValue().toString();
+                                    adapter.add(value);
+                                    }
                             }
-                        } else {
-                            Intent intent = new Intent(tmpActivity.this, MainActivity.class);
-                            startActivity(intent);
-                            finish();
+                        }
 
-                            Toast.makeText(tmpActivity.this,"Đăng nhập thành công",Toast.LENGTH_SHORT).show();
-                    }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                        }
+                    });
+
                 }
-            });
-
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
             }
         });
-
-
-
-
-
     }
 }

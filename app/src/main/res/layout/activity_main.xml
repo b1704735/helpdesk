@@ -7,28 +7,6 @@
     tools:context=".MainActivity">
 
     <Button
-        android:id="@+id/btnaddData"
-        android:layout_width="158dp"
-        android:layout_height="47dp"
-        android:text="Test ở đây"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.761" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
         android:id="@+id/btnData"
         android:layout_width="158dp"
         android:layout_height="47dp"
@@ -38,12 +16,23 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.636" />
+        app:layout_constraintVertical_bias="0.418" />
+
+    <Button
+        android:id="@+id/btnaddData"
+        android:layout_width="265dp"
+        android:layout_height="80dp"
+        android:text="test hiện danh sách lỗi"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.583" />
 
     <Button
         android:id="@+id/btnlogout"
-        android:layout_width="185dp"
-        android:layout_height="72dp"
+        android:layout_width="102dp"
+        android:layout_height="47dp"
         android:text="Đăng xuất"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
