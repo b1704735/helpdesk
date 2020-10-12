@@ -1,5 +1,6 @@
 package com.example.helpdesk;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +18,8 @@ public class DataActivity extends AppCompatActivity {
     ListView lvContact;
     ArrayAdapter<String> adapter;
     String TAG="FIREBASE";
+    FirebaseDatabase database;
+    DatabaseReference myRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,10 +29,10 @@ public class DataActivity extends AppCompatActivity {
         lvContact=findViewById(R.id.lvContact);
         lvContact.setAdapter(adapter);
 //lấy đối tượng FirebaseDatabase
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        database = FirebaseDatabase.getInstance();
 //Kết nối tới node có tên là users (node này do ta định nghĩa trong CSDL Firebase)
         String keyyy = "-MJM-3XxCfpUgfSyxl9K";
-        final DatabaseReference myRef = database.getReference().child("problems");
+        myRef = database.getReference().child("users");
 //truy suất và lắng nghe sự thay đổi dữ liệu
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -38,11 +41,25 @@ public class DataActivity extends AppCompatActivity {
 //vòng lặp để lấy dữ liệu khi có sự thay đổi trên Firebase
                 for (DataSnapshot data: dataSnapshot.getChildren())
                 {
-//lấy key của dữ liệu
                     String key=data.getKey();
-//lấy giá trị của key (nội dung)
-                    String value=data.getValue().toString();
-                    adapter.add(key+"\n"+value);
+                    myRef = database.getReference().child("users").child(key);
+
+                    myRef.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for(DataSnapshot data2: dataSnapshot.getChildren()){
+                                if(data2.getKey().toString().equals("position")){
+                                    adapter.add(data2.getValue().toString());
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                        }
+                    });
+
                 }
             }
             @Override

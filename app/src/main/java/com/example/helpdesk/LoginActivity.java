@@ -3,9 +3,12 @@ package com.example.helpdesk;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -17,12 +20,19 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity {
     private Button btnDangNhap;
     private EditText txtTaiKhoan, txtMatKhau;
     private ProgressBar progressBar;
     private FirebaseAuth auth;
+    String TAG="FIREBASE";
+    String key;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -30,11 +40,11 @@ public class LoginActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
 
         //bug in here
-        /* // hàm kiểm tra trạng thái đăng nhập
-        if (auth.getCurrentUser() != null) {
-            startActivity(new Intent(tmpActivity.this, DataActivity.class));
+        // hàm kiểm tra trạng thái đăng nhập
+        /*if (auth.getCurrentUser() != null) {
+            startActivity(new Intent(LoginActivity.this, DataActivity.class));
             finish();
-        }*/
+        } */
 
         setContentView(R.layout.activity_login);
 
@@ -44,6 +54,7 @@ public class LoginActivity extends AppCompatActivity {
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         auth = FirebaseAuth.getInstance();
+
 
         btnDangNhap.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,11 +87,66 @@ public class LoginActivity extends AppCompatActivity {
                                 Toast.makeText(LoginActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
                             }
                         } else {
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            startActivity(intent);
-                            finish();
+                            FirebaseDatabase database = FirebaseDatabase.getInstance();
+                            final DatabaseReference myRef = database.getReference().child("users");
+                            myRef.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    for (final DataSnapshot data: dataSnapshot.getChildren())
+                                    {
+                                        key=data.getKey();
+                                        //String value=data.getValue().toString();
+                                        //adapter.add(key+" "+value);
 
-                            Toast.makeText(LoginActivity.this,"Đăng nhập thành công",Toast.LENGTH_SHORT).show();
+                                        FirebaseDatabase database2 = FirebaseDatabase.getInstance();
+                                        DatabaseReference myRef2 = database2.getReference().child("users").child(key).getRef();
+                                        myRef2.addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot2) {
+                                                for (final DataSnapshot data2: dataSnapshot2.getChildren()){
+                                                    if(data2.getKey().equals("email")){
+                                                        if(data2.getValue().toString().equals(txtTaiKhoan.getText().toString())){
+                                                            for (DataSnapshot data3: dataSnapshot2.getChildren()){
+                                                                if(data3.getKey().equals("position")){
+                                                                    if(data3.getValue().toString().equals("staff")){
+                                                                        Intent intent = new Intent(LoginActivity.this, NVActivity.class);
+                                                                        startActivity(intent);
+                                                                        finish();
+                                                                        Toast.makeText(LoginActivity.this,"Đăng nhập thành công",Toast.LENGTH_SHORT).show();
+                                                                    }
+                                                                    else if(data3.getValue().toString().equals("manager")){
+                                                                        Intent intent = new Intent(LoginActivity.this, QLActivity.class);
+                                                                        startActivity(intent);
+                                                                        finish();
+
+                                                                        Toast.makeText(LoginActivity.this,"Đăng nhập thành công",Toast.LENGTH_SHORT).show();
+                                                                    }
+                                                                    else {
+                                                                        Intent intent = new Intent(LoginActivity.this, KTVActivity.class);
+                                                                        startActivity(intent);
+                                                                        finish();
+
+                                                                        Toast.makeText(LoginActivity.this,"Đăng nhập thành công",Toast.LENGTH_SHORT).show();
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                                            }
+                                        });
+                                    }
+                                }
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                    Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                                }
+                            });
                         }
                     }
                 });
