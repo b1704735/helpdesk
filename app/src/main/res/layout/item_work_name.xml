@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <!-- XML Thể hiện thiết kế giao diện của từng phần tử item trong list view KTV Activity -->
+
+    <ImageView
+        android:id="@+id/imgStatus"
+        android:layout_width="63dp"
+        android:layout_height="63dp" />
+
+    <TextView
+        android:layout_toRightOf="@id/imgStatus"
+        android:text="Work_name"
+        android:textSize="20sp"
+        android:id="@+id/txtWork_name"
+        android:textStyle="bold"
+        android:layout_marginTop="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/deadline"
+        android:layout_below="@id/txtWork_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="100dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/imgStatus"
+        android:text="Deadline: "
+        android:textSize="18sp" />
+
+    <TextView
+        android:layout_toRightOf="@id/deadline"
+        android:id="@+id/txtDeadline"
+        android:text="Deadline"
+        android:textSize="18sp"
+        android:layout_below="@id/txtWork_name"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</RelativeLayout>

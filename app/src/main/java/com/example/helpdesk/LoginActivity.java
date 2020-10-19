@@ -33,6 +33,8 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     String TAG="FIREBASE";
     String key;
+
+    public String tk_email = "";
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -52,6 +54,8 @@ public class LoginActivity extends AppCompatActivity {
         txtMatKhau = (EditText) findViewById(R.id.txtMatKhau);
         btnDangNhap = (Button) findViewById(R.id.btnDangNhap);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
+
+        tk_email = txtTaiKhoan.getText().toString();
 
         auth = FirebaseAuth.getInstance();
 
@@ -100,6 +104,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                         FirebaseDatabase database2 = FirebaseDatabase.getInstance();
                                         DatabaseReference myRef2 = database2.getReference().child("users").child(key).getRef();
+                                        final String keyyyy = key;
                                         myRef2.addValueEventListener(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot dataSnapshot2) {
@@ -110,6 +115,8 @@ public class LoginActivity extends AppCompatActivity {
                                                                 if(data3.getKey().equals("position")){
                                                                     if(data3.getValue().toString().equals("staff")){
                                                                         Intent intent = new Intent(LoginActivity.this, NVActivity.class);
+                                                                        intent.putExtra("key1",txtTaiKhoan.getText().toString());
+                                                                        intent.putExtra("key2",keyyyy);
                                                                         startActivity(intent);
                                                                         finish();
                                                                         Toast.makeText(LoginActivity.this,"Đăng nhập thành công",Toast.LENGTH_SHORT).show();

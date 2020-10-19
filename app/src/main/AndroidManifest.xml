@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.helpdesk">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
 
         android:allowBackup="true"
@@ -18,13 +20,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    <activity android:name=".AddDataActivity"></activity>
-    <activity android:name=".MainActivity"></activity>
-    <activity android:name=".tmpActivity"></activity>
-    <activity android:name=".DataActivity"></activity>
-    <activity android:name=".NVActivity"></activity>
-    <activity android:name=".QLActivity"></activity>
-    <activity android:name=".KTVActivity"></activity>
+
+        <activity android:name=".AddDataActivity"></activity>
+        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".tmpActivity"></activity>
+        <activity android:name=".DataActivity"></activity>
+        <activity android:name=".NVActivity"></activity>
+        <activity android:name=".QLActivity"></activity>
+        <activity android:name=".KTVActivity"></activity>
+        <activity android:name=".NV_faqsActivity"></activity>
+        <activity android:name=".NewproblemsActivity"></activity>
+        <activity android:name=".NewproblemsActivity2"></activity>
+        <activity android:name=".NV_problemsActivity"></activity>
+        <activity android:name=".Detail_work_name_Activity"></activity>
+        <activity android:name=".KTV_makeSolutionActivity"></activity>
+
     </application>
 
 </manifest>
