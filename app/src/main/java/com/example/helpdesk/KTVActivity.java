@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,6 +28,12 @@ public class KTVActivity extends AppCompatActivity {
     private Button btnDangXuat;
     private ListView lvWorks;
     private Button btnMain;
+    private TextView txtXinChao;
+    private String key_DN;
+    DatabaseReference databaseXinChao;
+    boolean [] works_i; // Dùng để lấy Số của vị trí Tên người dùng ở trên Firebase
+
+
     String []key_works = new String [100];
     int work_i = 0;
 
@@ -39,9 +46,39 @@ public class KTVActivity extends AppCompatActivity {
         lvWorks = findViewById(R.id.lvWorks);
         btnMain = findViewById(R.id.btnMain);
 
-        final ArrayList<Works> list = new ArrayList<>(); //Mảng nhận các giá trị
+        final ArrayList<Works> list = new ArrayList<>(); //Mảng nhận các giá trị trong Work
         final WorksAdapter adapter = new WorksAdapter(this,R.layout.item_work_name,list);
         lvWorks.setAdapter(adapter);
+
+        works_i = new boolean [20]; // Lấy vị trí trên Firebase;
+        for (int i=0;i<works_i.length;i++)
+        {
+            works_i[i]=true;  //Khởi tạo giá trị mảng
+        }
+
+        txtXinChao = findViewById(R.id.txtXinChao);
+        Intent intent = getIntent(); //Lấy Key truyền từ Login để hiện tên chỗ kế Đăng xuất
+        key_DN = intent.getStringExtra("key2"); //Key users
+
+        databaseXinChao = FirebaseDatabase.getInstance().getReference().child("users").child(key_DN); //Lấy chỗ node : "key_DN"
+        databaseXinChao.addValueEventListener(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+            {
+                for(DataSnapshot data: dataSnapshot.getChildren())
+                {
+                    if (data.getKey().equals("name"))
+                    {
+                         txtXinChao.setText("Xin chào " + data.getValue().toString());
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError){
+            Log.w("FIREBASE", "loadPost:onCancelled", databaseError.toException());
+        }
+        });
 
         final DatabaseReference database = FirebaseDatabase.getInstance().getReference().child("works");
         database.addValueEventListener(new ValueEventListener()
@@ -63,33 +100,43 @@ public class KTVActivity extends AppCompatActivity {
                             // 3 dòng for để có thể lần lượt cùng truy cập đến 3 dòng dữ liệu trên firebase
                             for(DataSnapshot snapshot1: dataSnapshot.getChildren())
                             {
-
                                 // Dòng for truy cập đến cột "Deadline" thuộc bảng "Works"
                                 for (DataSnapshot snapshot2 : dataSnapshot.getChildren())
                                 {
                                     // Dòng for truy cập đến Cột: Status thuộc bảng "Works"
-                                    for (DataSnapshot snapshot3 : dataSnapshot.getChildren()) {
-                                        if (snapshot1.getKey().equals("work_name") && snapshot2.getKey().equals("deadline") && snapshot3.getKey().equals("status") )
+                                    for (DataSnapshot snapshot3 : dataSnapshot.getChildren())
+                                    {
+                                        for (DataSnapshot snapshot4 :dataSnapshot.getChildren()) // Lấy những công việc ứng với key Users tương ứng
                                         {
-                                            String key = dataSnapshot.getKey();
-                                            key_works[work_i] = key; //Lấy KEY của bảng WORDS để dùng cho sau này.
-                                            work_i+=1;
+                                            if (snapshot1.getKey().equals("work_name") && snapshot2.getKey().equals("deadline") && snapshot3.getKey().equals("status") && snapshot4.getKey().equals("user_fix")) {
 
-                                            if (snapshot3.getValue().toString().equals("0"))
-                                            {
-                                                list.add(new Works(snapshot1.getValue().toString(), snapshot2.getValue().toString(), R.drawable.red));
-                                            }
-                                            else if (snapshot3.getValue().toString().equals("1"))
-                                            {
-                                                list.add(new Works(snapshot1.getValue().toString(), snapshot2.getValue().toString(), R.drawable.vang));
-                                            }
-                                            else if (snapshot3.getValue().toString().equals("2"))
-                                            {
-                                                list.add(new Works(snapshot1.getValue().toString(), snapshot2.getValue().toString(), R.drawable.status2));
-                                            }
-                                            else if (snapshot3.getValue().toString().equals("3"))
-                                            {
-                                                list.add(new Works(snapshot1.getValue().toString(), snapshot2.getValue().toString(), R.drawable.xanh));
+                                                if (snapshot4.getValue().toString().equals(key_DN)) // Lấy những công việc ứng với key Users tương ứng
+                                                {
+                                                    String key = dataSnapshot.getKey();
+
+                                                    // works_i [work_i] = true;
+
+                                                    if (snapshot3.getValue().toString().equals("0")) // Chưa nhận công việc
+                                                    {
+                                                        list.add(new Works(snapshot1.getValue().toString(), snapshot2.getValue().toString(), R.drawable.red));
+                                                        key_works[work_i] = key; //Lấy KEY của bảng WORDS để dùng cho sau này.
+                                                        work_i += 1;
+                                                    } else if (snapshot3.getValue().toString().equals("1")) // Đã nhận công việc, chờ hoàn thành
+                                                    {
+                                                        list.add(new Works(snapshot1.getValue().toString(), snapshot2.getValue().toString(), R.drawable.vang));
+                                                        key_works[work_i] = key; //Lấy KEY của bảng WORDS để dùng cho sau này.
+                                                        work_i += 1;
+                                                    }
+                                                    /*else if (snapshot3.getValue().toString().equals("2")) //Công việc: Không thể giải quyết được
+                                                    {
+                                                        list.add(new Works(snapshot1.getValue().toString(), snapshot2.getValue().toString(), R.drawable.status2));
+                                                    }
+                                             else if (snapshot3.getValue().toString().equals("3")) // Ra số 3 nghĩa là công việc đã hoàn thành. Không cần in ra
+                                                {
+                                                    list.add(new Works(snapshot1.getValue().toString(), snapshot2.getValue().toString(), R.drawable.xanh));
+                                                }*/
+                                                }
+//                                                else Toast.makeText(KTVActivity.this,"Danh sách trống",Toast.LENGTH_SHORT).show();
                                             }
                                         }
                                     }
@@ -114,6 +161,10 @@ public class KTVActivity extends AppCompatActivity {
             }
         });
 
+        final DatabaseReference databaseWorks = FirebaseDatabase.getInstance().getReference().child("works");
+
+
+
         //Sự kiện nút đăng xuất
         btnDangXuat.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,13 +188,17 @@ public class KTVActivity extends AppCompatActivity {
             DatabaseReference database = FirebaseDatabase.getInstance().getReference().child("works");
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+
                 Intent intent = new Intent(KTVActivity.this, Detail_work_name_Activity.class);
                 Bundle bundle = new Bundle(); // Hàm truyền dữ liệu qua Activity khác
-
-                bundle.putString("key1",key_works[i]);
+                Bundle bundle1 = new Bundle();
+                bundle.putString("key_works",key_works[i]); //key của works
+                bundle1.putString("key_user",key_DN); // key user
                 intent.putExtras(bundle);
-
+                intent.putExtras(bundle1);
                 startActivity(intent);
+
             }
         });
     }

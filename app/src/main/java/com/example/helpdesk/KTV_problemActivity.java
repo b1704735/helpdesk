@@ -5,6 +5,8 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -20,6 +22,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -38,47 +41,55 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class NV_problemsActivity extends AppCompatActivity {
+public class KTV_problemActivity extends AppCompatActivity {
 
-    TextView txtproblem,txtstate;
+    TextView txtproblem,txtstate,txtuser_create, txtEmail;
     ImageView imgproblem, image;
     FirebaseDatabase database;
-    DatabaseReference myRef;
-    String key_problem,key_user, value = "";
-    FirebaseStorage storage = FirebaseStorage.getInstance();
-    Button  btnsua, btnimage;
-    ArrayAdapter<String> adapter3;
-    EditText edtreply;
-    Button btnreply;
-    String key_reply = "", TAG="FIREBASE";
+    DatabaseReference myRef3, myRef4, myRef5;
+    DatabaseReference myRef, myRef2;
+    String key_problem, user_create = "", user_reply = null, khoa, value, name_reply = "", TAG="FIREBASE";
+    //khoa là key người tạo chat
+    Button btnduyet, btnwork, btnimage,btnworks;
     ListView lvreply;
-    DatabaseReference myRef3, myRef4;
+    ArrayAdapter<String> adapter3;
+    EditText edtreply, edttmp;
+    Button btnreply;
+    String key_reply = "";
+    int STT_reply = 0;
+    String day_time = "";
+    int REQUEST_CODE_IMAGE = 1, SELECT_PICTURE = 1;
 
     String []key_replies = new String[1000];
     int replies_i = 0;
 
-    int REQUEST_CODE_IMAGE = 1, SELECT_PICTURE = 1;
-
     String name_imamge, prId;
+    FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageRef = storage.getReference();
     Boolean have_image = false;
 
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_nv_problems);
+        setContentView(R.layout.activity_ktv_problem);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
 
         image = (ImageView) findViewById(R.id.image);
+        btnimage = (Button) findViewById(R.id.btnimage);
         txtproblem = (TextView) findViewById(R.id.txtquestion);
         txtstate = (TextView) findViewById(R.id.txtstate);
         imgproblem = (ImageView) findViewById(R.id.imgproblem);
-        btnsua = (Button) findViewById(R.id.btnedit);
-        btnsua.setEnabled(false);
+        txtuser_create = (TextView) findViewById(R.id.txtuser_create);
+        txtEmail = (TextView) findViewById(R.id.txtEmail);
+        edtreply = (EditText) findViewById(R.id.edtreply);
+        btnreply = (Button) findViewById(R.id.btnreply);
+
 
         Intent intent = getIntent();
         key_problem = intent.getStringExtra("key1");
-        key_user = intent.getStringExtra("key2");
-        edtreply = (EditText) findViewById(R.id.edtreply);
+        khoa = intent.getStringExtra("key2");
+
+//        Toast.makeText(this, key_problem+"\n"+khoa, Toast.LENGTH_SHORT).show();
 
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference().child("problems").child(key_problem);
@@ -90,39 +101,52 @@ public class NV_problemsActivity extends AppCompatActivity {
                     if(data.getKey().equals("content")){
                         txtproblem.setText(data.getValue().toString());
                     }
+                    if(data.getKey().equals("image_url") && !data.getValue().toString().equals("")){
+                        Picasso.with(KTV_problemActivity.this).load(data.getValue().toString()).into(imgproblem);
+                    }
                     if(data.getKey().equals("status")){
                         if(data.getValue().toString().equals("0")){
                             txtstate.setText("Đã gửi");
-                            btnsua.setEnabled(true);
                         }else if(data.getValue().toString().equals("1")){
-                            txtstate.setText("Đang điều tra");
+                            txtstate.setText("Trạng thái: Đang điều tra");
                         }else if(data.getValue().toString().equals("2")){
-                            txtstate.setText("Chờ duyệt");
+                            txtstate.setText("Trạng thái: Chờ duyệt");
                         }else{
-                            txtstate.setText("Đã hoàn thành");
-                            btnimage.setEnabled(false);
-                            btnreply.setEnabled(false);
+                            txtstate.setText("Trạng thái: Đã hoàn thành");
                         }
                     }
-                    if(data.getKey().equals("image_url")){
-                        Picasso.with(NV_problemsActivity.this).load(data.getValue().toString()).into(imgproblem);
+                    if(data.getKey().equals("user_create")){
+                        user_create = user_create.concat(data.getValue().toString());
+                        //txtuser_create.setText(user_create);
+                        myRef2 = database.getReference().child("users").child(user_create);
+
+                        myRef2.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                for(DataSnapshot data2: dataSnapshot.getChildren()){
+                                    if(data2.getKey().equals("name")){
+                                        txtuser_create.setText("Người tạo : "+data2.getValue().toString());
+                                    }
+                                    if(data2.getKey().equals("email")){
+                                        txtEmail.setText("Emai : "+data2.getValue().toString());
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                //do something
+                            }
+                        });
                     }
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                //do something
             }
         });
-
-        btnsua.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(NV_problemsActivity.this, "Tính năng đang được phát triển", Toast.LENGTH_SHORT).show();
-            }
-        });
-
 
         //-----------------------------------------Hiện reply----------------------------------
 
@@ -152,16 +176,13 @@ public class NV_problemsActivity extends AppCompatActivity {
                                     String value2 = "";
                                     value = value2;
                                     for(DataSnapshot data1: dataSnapshot.getChildren()){
-
                                         if(data1.getKey().toString().equals("image_url")){
                                             if(data1.getValue().toString().length()>10){
                                                 value = value.concat(" [kèm ảnh]");
                                             }
                                         }
-
                                         if(data1.getKey().toString().equals("content")){
                                             value = value.concat(data1.getValue().toString());
-                                            //adapter3.add(data1.getValue().toString());
                                         }
                                     }
                                     adapter3.add(value);
@@ -184,15 +205,13 @@ public class NV_problemsActivity extends AppCompatActivity {
         lvreply.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
-                //Toast.makeText(QL_problemsActivity.this, key_replies[i], Toast.LENGTH_SHORT).show();
-
                 myRef4 = database.getReference().child("replies").child(key_replies[i]);
                 myRef4.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for(DataSnapshot data: dataSnapshot.getChildren()){
                             if(data.getKey().equals("user_create")){
-                                Intent intent = new Intent(NV_problemsActivity.this, ChatActivity.class);
+                                Intent intent = new Intent(KTV_problemActivity.this, ChatActivity.class);
                                 intent.putExtra("key1",key_replies[i]);
                                 intent.putExtra("key2",data.getValue().toString());
                                 startActivity(intent);
@@ -208,11 +227,7 @@ public class NV_problemsActivity extends AppCompatActivity {
             }
         });
 
-
-
-        //-------------------------------------------------------------------------------------
-
-        btnimage = (Button) findViewById(R.id.btnimage);
+//-------------------------------------------------------------------------------------
         btnimage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -221,10 +236,7 @@ public class NV_problemsActivity extends AppCompatActivity {
             }
         });
 
-        //------------------------------------------------------------------------------------------------------------------
-
-
-        btnreply = (Button) findViewById(R.id.btnreply);
+//------------------------------------------------------------------------------------------------------------------
         btnreply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -258,14 +270,14 @@ public class NV_problemsActivity extends AppCompatActivity {
                                         DateFormat df = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
                                         String date = df.format(Calendar.getInstance().getTime());
 
-                                        QL_problemsActivity.reply rl = new QL_problemsActivity.reply(edtreply.getText().toString(),url_image,key_problem,date,key_user);
+                                        QL_problemsActivity.reply rl = new QL_problemsActivity.reply(edtreply.getText().toString(),url_image,key_problem,date,khoa);
                                         // pushing user to 'users' node using the userId
                                         mDatabase.child(prId).setValue(rl);
-                                        Toast.makeText(NV_problemsActivity.this, "Đã gửi", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(KTV_problemActivity.this, "Đã gửi", Toast.LENGTH_SHORT).show();
                                         edtreply.setText("");
 
                                     }catch (Exception e){
-                                        Toast.makeText(NV_problemsActivity.this, "Lỗi "+e.toString(), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(KTV_problemActivity.this, "Lỗi "+e.toString(), Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             });
@@ -282,15 +294,15 @@ public class NV_problemsActivity extends AppCompatActivity {
                         DateFormat df = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
                         String date = df.format(Calendar.getInstance().getTime());
 
-                        QL_problemsActivity.reply rl = new QL_problemsActivity.reply(edtreply.getText().toString(),"",key_problem,date,key_user);
+                        QL_problemsActivity.reply rl = new QL_problemsActivity.reply(edtreply.getText().toString(),"",key_problem,date,khoa);
                         // pushing user to 'users' node using the userId
                         mDatabase.child(prId).setValue(rl);
-                        Toast.makeText(NV_problemsActivity.this, "Đã gửi", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(KTV_problemActivity.this, "Đã gửi", Toast.LENGTH_SHORT).show();
                         edtreply.setText("");
 
 
                     }catch (Exception e){
-                        Toast.makeText(NV_problemsActivity.this, "Lỗi "+e.toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(KTV_problemActivity.this, "Lỗi "+e.toString(), Toast.LENGTH_SHORT).show();
                     }
                 }
                 key_replies[replies_i] = prId;
@@ -299,7 +311,6 @@ public class NV_problemsActivity extends AppCompatActivity {
                 have_image = false;
             }
         });
-
     }
 
     public static class reply {

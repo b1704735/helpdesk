@@ -1,11 +1,11 @@
 package com.example.helpdesk;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,8 +22,9 @@ public class NewproblemsActivity2 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_newproblems2);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
 
-        edtcontent = (EditText) findViewById(R.id.edtcontent);
+        edtcontent = (EditText) findViewById(R.id.edtwork_name);
         btnreport = (Button) findViewById(R.id.btnreport);
 
         Intent intent = getIntent();
@@ -83,7 +84,6 @@ public class NewproblemsActivity2 extends AppCompatActivity {
             this.image_url=image_url;
             this.user_create=user_create;
             this.status=status;
-
         }
     }
 }

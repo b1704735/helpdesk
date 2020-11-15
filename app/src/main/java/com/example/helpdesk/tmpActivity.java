@@ -5,65 +5,78 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.Date;
+import java.sql.Time;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class tmpActivity extends AppCompatActivity {
 
-    ImageView img;
-    String url;
+
+    FirebaseDatabase database_problems;
+    DatabaseReference myRef1, myRef2, myRef3, myRef4, myRef5;
+    String key_problem = "-MJq6Vz3IW76oRa7xD-W", value = "", TAG="FIREBASE";
+    ListView lvreply;
+    ArrayAdapter<String> adapter3;
+    String []key_user = new String[1000];
+    String []name = new String[1000];
+    int key_i = 0;
+    int name_i = 0;
     Button btn;
+    TextView tv;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tmp);
 
-        img = (ImageView) findViewById(R.id.imgview);
-        btn = (Button) findViewById(R.id.button);
+        String title = "-MJM-yom0gUsj5HPHCE4";
 
-        url = "https://2sao.vietnamnetjsc.vn/images/2020/03/14/12/30/hot-girl-1.jpg";
-
-        btn.setOnClickListener(new View.OnClickListener() {
+        database_problems = FirebaseDatabase.getInstance();
+        myRef1 = database_problems.getReference().child("works").child(title);
+        myRef1.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onClick(View view) {
-                new LoadImageInternet().execute("https://2sao.vietnamnetjsc.vn/images/2020/03/14/12/30/hot-girl-1.jpg");
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot data: dataSnapshot.getChildren()){
+                    if(data.getKey().equals("problem")){
+                        key_problem = data.getValue().toString();
+                        Toast.makeText(tmpActivity.this, key_problem, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
 
-    }
-
-    private  class LoadImageInternet extends AsyncTask<String, Void, Bitmap>{
-        Bitmap bitmapHinh = null;
-        @Override
-        protected Bitmap doInBackground(String... strings) {
-            try {
-                URL url = new URL(strings[0]);
-                InputStream inputStream = url.openConnection().getInputStream();
-                bitmapHinh = BitmapFactory.decodeStream(inputStream);
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return bitmapHinh;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            super.onPostExecute(bitmap);
-            img.setImageBitmap(bitmap);
-        }
     }
 }

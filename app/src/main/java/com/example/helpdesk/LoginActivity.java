@@ -1,6 +1,7 @@
 package com.example.helpdesk;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -39,6 +40,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
+
         auth = FirebaseAuth.getInstance();
 
         //bug in here
@@ -123,6 +126,7 @@ public class LoginActivity extends AppCompatActivity {
                                                                     }
                                                                     else if(data3.getValue().toString().equals("manager")){
                                                                         Intent intent = new Intent(LoginActivity.this, QLActivity.class);
+                                                                        intent.putExtra("key2",keyyyy);
                                                                         startActivity(intent);
                                                                         finish();
 
@@ -130,6 +134,7 @@ public class LoginActivity extends AppCompatActivity {
                                                                     }
                                                                     else {
                                                                         Intent intent = new Intent(LoginActivity.this, KTVActivity.class);
+                                                                        intent.putExtra("key2",keyyyy);
                                                                         startActivity(intent);
                                                                         finish();
 

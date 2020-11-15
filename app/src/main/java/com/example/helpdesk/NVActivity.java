@@ -1,16 +1,15 @@
 package com.example.helpdesk;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,11 +19,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-import java.util.StringTokenizer;
 
 
 public class NVActivity extends AppCompatActivity {
@@ -52,7 +46,9 @@ public class NVActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nv);
-        tennv = (TextView) findViewById(R.id.txtnhanvien);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
+
+        tennv = (TextView) findViewById(R.id.txtname);
         btnDX = (Button) findViewById(R.id.btnlogout);
         btnthemproblems = (Button) findViewById(R.id.addproblems);
         Intent intent = getIntent();
@@ -80,13 +76,14 @@ public class NVActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(NVActivity.this, LoginActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
         //--------------------------------------------------------------------------------------
 
         adapter1=new ArrayAdapter<>(this,android.R.layout.simple_list_item_1);
-        lvContact1=findViewById(R.id.lvContact1);
+        lvContact1=findViewById(R.id.lvfaqs);
         lvContact1.setAdapter(adapter1);
         myRef1 = database.getReference().child("faqs");
         myRef1.addValueEventListener(new ValueEventListener() {
@@ -137,7 +134,7 @@ public class NVActivity extends AppCompatActivity {
         //------------------------------------------------------------------------------------------
 
         adapter2=new ArrayAdapter<>(this,android.R.layout.simple_list_item_1);
-        lvContact2=findViewById(R.id.lvContact2);
+        lvContact2=findViewById(R.id.lvproblems);
         lvContact2.setAdapter(adapter2);
         myRef2 = database.getReference().child("problems");
         myRef2.addValueEventListener(new ValueEventListener() {

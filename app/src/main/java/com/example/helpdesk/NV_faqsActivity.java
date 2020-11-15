@@ -1,6 +1,7 @@
 package com.example.helpdesk;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -22,8 +23,9 @@ public class NV_faqsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nv_faqs);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
 
-        question = (TextView)findViewById(R.id.txtproblem);
+        question = (TextView)findViewById(R.id.txtquestion);
         answer = (TextView)findViewById(R.id.txtanswer);
 
         Intent intent = getIntent();

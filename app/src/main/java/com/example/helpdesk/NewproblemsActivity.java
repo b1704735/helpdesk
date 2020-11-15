@@ -1,6 +1,7 @@
 package com.example.helpdesk;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -28,8 +29,8 @@ import java.util.Calendar;
 
 public class NewproblemsActivity<uploadTask> extends AppCompatActivity {
 
-    ImageView imagecam,imageview;
-    int REQUEST_CODE_IMAGE = 1;
+    ImageView imagecam,imageview,imgsto;
+    int REQUEST_CODE_IMAGE = 1, SELECT_PICTURE = 1;
     Button btnupimage;
     FirebaseStorage storage = FirebaseStorage.getInstance();
     String name_imamge,url_image,khoa;
@@ -39,8 +40,10 @@ public class NewproblemsActivity<uploadTask> extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_newproblems);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
 
         imagecam = (ImageView) findViewById(R.id.imacam);
+        imgsto = (ImageView) findViewById(R.id.imgsto);
         imageview = (ImageView) findViewById(R.id.imgview);
         btnupimage = (Button) findViewById(R.id.btnupimage);
 
@@ -52,6 +55,21 @@ public class NewproblemsActivity<uploadTask> extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(intent,REQUEST_CODE_IMAGE);
+            }
+        });
+
+        imgsto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                /*
+
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent,
+                        "Select Picture"), SELECT_PICTURE);
+
+                 */
             }
         });
 
@@ -99,7 +117,8 @@ public class NewproblemsActivity<uploadTask> extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if(requestCode == REQUEST_CODE_IMAGE && resultCode == RESULT_OK && data != null){
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REQUEST_CODE_IMAGE && resultCode == RESULT_OK && data != null || requestCode == SELECT_PICTURE && resultCode == RESULT_OK && data != null ){
             Bitmap bitmap = (Bitmap) data.getExtras().get("data");
             imageview.setImageBitmap(bitmap);
         }

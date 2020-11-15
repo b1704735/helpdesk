@@ -7,12 +7,13 @@
     android:layout_height="match_parent">
 
     <EditText
-        android:id="@+id/edtcontent"
+        android:id="@+id/edtwork_name"
         android:layout_width="320dp"
         android:layout_height="185dp"
         android:ems="10"
         android:gravity="start|top"
         android:inputType="textMultiLine"
+        android:hint="Nhập mô tả sự cố"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.494"
