@@ -47,15 +47,9 @@
         <ListView
             android:id="@+id/lvWorks"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="543dp"
             android:background="#DFBF83"
             android:cacheColorHint="@android:color/background_light" />
     </LinearLayout>
-
-    <Button
-        android:id="@+id/btnMain"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Main" />
 
 </LinearLayout>

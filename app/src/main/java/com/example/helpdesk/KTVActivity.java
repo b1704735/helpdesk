@@ -27,7 +27,6 @@ import java.util.List;
 public class KTVActivity extends AppCompatActivity {
     private Button btnDangXuat;
     private ListView lvWorks;
-    private Button btnMain;
     private TextView txtXinChao;
     private String key_DN;
     DatabaseReference databaseXinChao;
@@ -44,7 +43,6 @@ public class KTVActivity extends AppCompatActivity {
 
         btnDangXuat = (Button) findViewById(R.id.btnDangXuat);
         lvWorks = findViewById(R.id.lvWorks);
-        btnMain = findViewById(R.id.btnMain);
 
         final ArrayList<Works> list = new ArrayList<>(); //Mảng nhận các giá trị trong Work
         final WorksAdapter adapter = new WorksAdapter(this,R.layout.item_work_name,list);
@@ -172,14 +170,6 @@ public class KTVActivity extends AppCompatActivity {
                 Intent intent = new Intent (KTVActivity.this,LoginActivity.class);
                 startActivity(intent);
                 finish();
-            }
-        });
-
-        btnMain.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(KTVActivity.this,MainActivity.class);
-                startActivity(intent);
             }
         });
 

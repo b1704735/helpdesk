@@ -6,29 +6,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/txttime"
+    <ImageView
+        android:id="@+id/img"
         android:layout_width="318dp"
-        android:layout_height="35dp"
-        android:text="time"
+        android:layout_height="365dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.505"
+        app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.037" />
-
-    <TextView
-        android:id="@+id/txtcontent"
-        android:layout_width="318dp"
-        android:layout_height="35dp"
-        android:text="content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.505"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.116" />
+        app:layout_constraintVertical_bias="0.71"
+        tools:srcCompat="@drawable/no_image" />
 
     <TextView
         android:id="@+id/txtuser"
@@ -40,17 +28,29 @@
         app:layout_constraintHorizontal_bias="0.505"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.192" />
+        app:layout_constraintVertical_bias="0.254" />
 
-    <ImageView
-        android:id="@+id/img"
+    <TextView
+        android:id="@+id/txttime"
         android:layout_width="318dp"
-        android:layout_height="365dp"
+        android:layout_height="35dp"
+        android:text="time"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintHorizontal_bias="0.505"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.592"
-        tools:srcCompat="@drawable/no_image" />
+        app:layout_constraintVertical_bias="0.099" />
+
+    <TextView
+        android:id="@+id/txtcontent"
+        android:layout_width="318dp"
+        android:layout_height="35dp"
+        android:text="content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.505"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.178" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -20,8 +20,8 @@
 
     <ListView
         android:id="@+id/lvfaqs"
-        android:layout_width="381dp"
-        android:layout_height="238dp"
+        android:layout_width="350dp"
+        android:layout_height="200dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.451"
@@ -67,8 +67,8 @@
 
     <ListView
         android:id="@+id/lvproblems"
-        android:layout_width="381dp"
-        android:layout_height="238dp"
+        android:layout_width="350dp"
+        android:layout_height="200dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.451"
@@ -90,37 +90,38 @@
 
     <Button
         android:id="@+id/btnproblems1"
-        android:layout_width="127dp"
-        android:layout_height="48dp"
+        android:layout_width="107dp"
+        android:layout_height="46dp"
         android:text="Chưa nhận"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.056"
+        app:layout_constraintHorizontal_bias="0.092"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.456" />
+        app:layout_constraintVertical_bias="0.455" />
 
     <Button
         android:id="@+id/btnproblems2"
-        android:layout_width="127dp"
-        android:layout_height="48dp"
+        android:layout_width="88dp"
+        android:layout_height="54dp"
         android:text="Đã nhận"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.544"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.456" />
+        app:layout_constraintVertical_bias="0.46" />
 
     <Button
         android:id="@+id/btnproblems3"
-        android:layout_width="127dp"
-        android:layout_height="48dp"
+        android:layout_width="75dp"
+        android:layout_height="46dp"
         android:text="Tất cả"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.947"
+        app:layout_constraintHorizontal_bias="0.901"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.456" />
+        app:layout_constraintVertical_bias="0.455" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

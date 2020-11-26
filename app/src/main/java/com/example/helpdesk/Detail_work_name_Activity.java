@@ -26,7 +26,6 @@ public class Detail_work_name_Activity extends AppCompatActivity
     private Button btnFail;
     private TextView txt;
     private TextView txtUser_create;
-    private ImageView image_url;
     private Button btnAccept;
     private Button btnDeny;
     private Button btnproblem;
@@ -53,7 +52,6 @@ public class Detail_work_name_Activity extends AppCompatActivity
         final TextView txtStatus = (TextView)findViewById(R.id.txtStatus);
         final TextView txtDeadline = (TextView) findViewById(R.id.txtDeadline);
         txtUser_create = (TextView) findViewById(R.id.txtUser_create);
-        image_url = (ImageView)findViewById(R.id.image_url);
         btnSolution = (Button) findViewById(R.id.btnSolution);
         btnFail = (Button)findViewById(R.id.btnFail);
 
@@ -77,25 +75,25 @@ public class Detail_work_name_Activity extends AppCompatActivity
                     {
                         for (DataSnapshot snapshot2 : dataSnapshot.getChildren()) {
                             if (snapshot.getKey().equals("work_name") && snapshot1.getKey().equals("deadline") && snapshot2.getKey().equals("status")) {
-                                txtWork_name.setText(snapshot.getValue().toString());
-                                txtDeadline.setText(snapshot1.getValue().toString());
+                                txtWork_name.setText("Công việc: "+snapshot.getValue().toString());
+                                txtDeadline.setText("Hạn chót: "+snapshot1.getValue().toString());
 
                                 if (snapshot2.getValue().toString().equals("0")) {
-                                    txtStatus.setText("Chờ phản hồi");
+                                    txtStatus.setText("Trạng thái: Chờ phản hồi");
                                     btnSolution.setVisibility(View.INVISIBLE);
                                     btnFail.setVisibility(View.INVISIBLE);
                                     txt.setText("Ấn 'CHẤP NHẬN' để nhận công việc, 'TỪ CHỐI' nếu bạn không thể hoàn thành");
                                 }
                                 else if (snapshot2.getValue().toString().equals("1"))
                                 {
-                                    txtStatus.setText("Đang điều tra");
+                                    txtStatus.setText("Trạng thái: Đang điều tra");
                                     btnAccept.setVisibility(View.INVISIBLE);
                                     btnDeny.setVisibility(View.INVISIBLE);
                                     txt.setText("Giải quyết công việc");
                                 }
                                 else if (snapshot2.getValue().toString().equals("2"))
                                 {
-                                    txtStatus.setText("Không thể hoàn thành");
+                                    txtStatus.setText("Trạng thái: Không thể hoàn thành");
                                     btnSolution.setVisibility(View.INVISIBLE);
                                     btnFail.setVisibility(View.INVISIBLE);
                                     btnAccept.setVisibility(View.INVISIBLE);
@@ -103,7 +101,7 @@ public class Detail_work_name_Activity extends AppCompatActivity
                                     txt.setText("Công việc không thể hoàn thành");
                                 }
                                 else {
-                                    txtStatus.setText("Đã hoàn thành");
+                                    txtStatus.setText("Trạng thái: Đã hoàn thành");
                                     btnSolution.setVisibility(View.INVISIBLE);
                                     btnFail.setVisibility(View.INVISIBLE);
                                     btnAccept.setVisibility(View.INVISIBLE);
@@ -129,7 +127,7 @@ public class Detail_work_name_Activity extends AppCompatActivity
                                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                                         for (final DataSnapshot snapshot4 : dataSnapshot.getChildren()) {
                                                             if (snapshot4.getKey().equals("name")){
-                                                                txtUser_create.setText(snapshot4.getValue().toString());
+                                                                txtUser_create.setText("Người tạo: "+snapshot4.getValue().toString());
                                                             }
                                                         }
                                                     }
@@ -139,13 +137,6 @@ public class Detail_work_name_Activity extends AppCompatActivity
                                                     }
                                                 });
                                             }
-                                            if (snapshot3.getKey().equals("image_url"))
-                                                try{
-                                                    Picasso.with(Detail_work_name_Activity.this).load(snapshot3.getValue().toString()).into(image_url);
-                                                }catch (Exception E){
-
-                                                }
-
                                         }
                                     }
 
@@ -165,12 +156,12 @@ public class Detail_work_name_Activity extends AppCompatActivity
                                         {
                                             if (snapshot3.getKey().equals("question"))
                                             {
-                                                txtQuestion.setText(snapshot3.getValue().toString());
+                                                txtQuestion.setText("FAQ: "+snapshot3.getValue().toString());
                                             }
 
                                             if (snapshot3.getKey().equals("answer"))
                                             {
-                                                txtAnswer.setText(snapshot3.getValue().toString());
+                                                txtAnswer.setText("Hướng giải quyết: "+snapshot3.getValue().toString());
                                             }
                                         }
                                     }

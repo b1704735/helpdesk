@@ -65,29 +65,29 @@
 
     <ListView
         android:id="@+id/lvreply"
-        android:layout_width="274dp"
-        android:layout_height="155dp"
+        android:layout_width="247dp"
+        android:layout_height="141dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.116"
+        app:layout_constraintHorizontal_bias="0.097"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.703" >
+        app:layout_constraintVertical_bias="0.666">
 
     </ListView>
 
     <EditText
         android:id="@+id/edtreply"
-        android:layout_width="274dp"
+        android:layout_width="247dp"
         android:layout_height="59dp"
         android:ems="10"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.116"
+        app:layout_constraintHorizontal_bias="0.097"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.854" />
+        app:layout_constraintVertical_bias="0.833" />
 
     <Button
         android:id="@+id/btnreply"
@@ -96,10 +96,10 @@
         android:text="Gửi"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.95"
+        app:layout_constraintHorizontal_bias="0.916"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.856" />
+        app:layout_constraintVertical_bias="0.836" />
 
     <Button
         android:id="@+id/btnimage"
@@ -108,10 +108,10 @@
         android:text="Gửi ảnh"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.941"
+        app:layout_constraintHorizontal_bias="0.916"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.749" />
+        app:layout_constraintVertical_bias="0.711" />
 
     <ImageView
         android:id="@+id/image"
@@ -119,10 +119,10 @@
         android:layout_height="96dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.94"
+        app:layout_constraintHorizontal_bias="0.915"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.637"
+        app:layout_constraintVertical_bias="0.571"
         app:srcCompat="@drawable/no_image" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
